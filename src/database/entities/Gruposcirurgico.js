@@ -2,7 +2,7 @@ import { EntitySchema } from "typeorm";
 
 const Gruposcirurgico = new EntitySchema({
   name: "Gruposcirurgico", // Entity name (your "Model")
-  tableName: "ruposcirurgicos", // database table
+  tableName: "gruposcirurgicos", // database table
   columns: {
     id: {
       primary: true, // primary key

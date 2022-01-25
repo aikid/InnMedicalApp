@@ -1,11 +1,25 @@
 import React from 'react';
 import styled from 'styled-components/native';
 
-export const Container = styled.View`
+export const Container = styled.SafeAreaView`
   flex: 1;
   background-color: #fff;
   align-items: center;
   justify-content: center;
+  padding-top: 100px;
+`;
+
+export const Title = styled.Text`
+  color: #000;
+  text-align: center;
+  font-size: 16px;
+`;
+
+export const Listagem = styled.FlatList.attrs({
+  showsVerticalScrollIndicator: false,
+  contentContainerStyle:{ padding: 30 }
+})`
+  width: 100%;
 `;
 
 export const FormContent = styled.KeyboardAvoidingView`
@@ -15,22 +29,6 @@ export const FormContent = styled.KeyboardAvoidingView`
   background-color: #fff;
   align-items: stretch;
   justify-content: center;
-`;
-
-export const ProgressContent = styled.View`
-  flex: 1;
-  width: 100%
-  padding-left: 20px;
-  padding-right: 20px;
-  align-items: stretch;
-`;
-
-
-export const Title = styled.Text`
-  color: #000;
-  text-align: center;
-  font-size: 16px;
-  margin-bottom: 20px;
 `;
 
 export const SubmitButton = styled.TouchableOpacity`

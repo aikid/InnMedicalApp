@@ -7,7 +7,7 @@ function Dashboard(){
     return (
         <Container>
             <Logo />
-            <Title>Dashboard</Title>
+            <Title>Triagens ja cadastradas</Title>
         </Container>
     );
 }
