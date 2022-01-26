@@ -7,12 +7,13 @@ export const Container = styled.View`
   padding-left: 20px;
   padding-right: 20px;
   background-color: #fff;
-  align-items: stretch;
+  align-items: center;
   justify-content: center;
 `;
 
-export const FormContent = styled.KeyboardAvoidingView`
-
+export const FormContent = styled.ScrollView`
+  width: 100%;
+  margin-top: 100px;
 `;
 
 export const ProgressContent = styled.View`
