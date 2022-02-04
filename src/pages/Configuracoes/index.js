@@ -30,7 +30,7 @@ function Configuracoes(){
                 <Button loading={false} onPress={() => navigation.navigate('SingleConfig', {repository: "Gruposcirurgico"})}>
                     Grupos Cirurgicos
                 </Button>
-                <Button loading={false} onPress={() => navigation.navigate('SingleConfig', {repository: "Gruposcirurgico"})}>
+                <Button loading={false} onPress={() => navigation.navigate('SingleConfig', {repository: "Cirurgia"})}>
                     Cirurgias
                 </Button>
                 <Button loading={false} onPress={() => navigation.navigate('MultConfig', {repository: "MaterialOPME"})}>

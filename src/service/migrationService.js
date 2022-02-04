@@ -37,6 +37,9 @@ export const initMigrations = async() =>{
         const tipoanestesia = await connection.getRepository("Tipoanestesia").find();
         if(tipoanestesia.length == 0) await createTipoAnestesias(connection);
 
+        const cirurgia = await connection.getRepository("Cirurgia").find();
+        if(cirurgia.length == 0) await createCirurgias(connection);
+
         return true;
     } catch (err) {
         return true;
@@ -349,6 +352,115 @@ export const createTipoAnestesias = async(connection) =>{
         return true;
     } catch (err){
         console.log('Erro ao criar anestesias: ', err);
+        return false;
+    }
+}
+
+export const createCirurgias = async(connection) =>{
+    try{
+        await connection.getRepository("Cirurgia").save({
+            nome: "URETERORRENOLITOTRIPSIA FLEXIVEL A LASER UNILATERAL",
+            tuss: "31102360"
+        });
+        await connection.getRepository("Cirurgia").save({
+            nome: "URETERORRENOLITOTRIPSIA RIGIDA A LASER UNILATERAL",
+            tuss: "31102565"
+        });
+        await connection.getRepository("Cirurgia").save({
+            nome: "NEFROLITOTRIPSIA PERCUTANEA UNILATERAL",
+            tuss: "31101275"
+        });
+        await connection.getRepository("Cirurgia").save({
+            nome: "CISTOLITOTRIPSIA LASER",
+            tuss: "31103561"
+        });
+        await connection.getRepository("Cirurgia").save({
+            nome: "RETIRADA ENDOSCOPICA DE CALCULO DE URETER UNILATERAL",
+            tuss: "31102220"
+        });
+        await connection.getRepository("Cirurgia").save({
+            nome: "COLOCACAO URETEROSCOPICA DE DUPLO J UNILATERAL",
+            tuss: "31102077"
+        });
+        await connection.getRepository("Cirurgia").save({
+            nome: "RETIRADA ENDOSCOPICA DE DUPLO J",
+            tuss: "31103472"
+        });
+        await connection.getRepository("Cirurgia").save({
+            nome: "DILATACAO ENDOSCOPICA UNILATERAL",
+            tuss: "31102085"
+        });
+        await connection.getRepository("Cirurgia").save({
+            nome: "PIELOGRAFIA PERCUTANEA",
+            tuss: "40813886"
+        });
+        await connection.getRepository("Cirurgia").save({
+            nome: "COLOCACAO NEFROSCOPICA DE DUPLO J UNILATERAL",
+            tuss: "31102069"
+        });
+        await connection.getRepository("Cirurgia").save({
+            nome: "NEFROSTOMIA PERCUTANEA UNILATERAL",
+            tuss: "31101313"
+        });
+        await connection.getRepository("Cirurgia").save({
+            nome: "CALCULO VESICAL - EXTRACAO ENDOSCOPICA",
+            tuss: "31103057"
+        });
+        await connection.getRepository("Cirurgia").save({
+            nome: "POSTECTOMIA",
+            tuss: "31206220"
+        });
+        await connection.getRepository("Cirurgia").save({
+            nome: "PLÁSTICA DE FREIO",
+            tuss: "31206212"
+        });
+        await connection.getRepository("Cirurgia").save({
+            nome: "PÊNIS CURVO",
+            tuss: "31206182"
+        });
+        await connection.getRepository("Cirurgia").save({
+            nome: "URETROPLASTIA ANTERIOR",
+            tuss: "31104193"
+        });
+        await connection.getRepository("Cirurgia").save({
+            nome: "MEATOPLASTIA",
+            tuss: "31104134"
+        });
+        await connection.getRepository("Cirurgia").save({
+            nome: "ELETROCOAGULAÇÃO DE LESÕES CUTÂNEAS",
+            tuss: "31206050"
+        });
+        await connection.getRepository("Cirurgia").save({
+            nome: "BIÓPSIA DE PÊNIS",
+            tuss: "31206034"
+        });
+        await connection.getRepository("Cirurgia").save({
+            nome: "CIRURGIA ESTERILIZADORA MASCULINA",
+            tuss: "31205070"
+        });
+        await connection.getRepository("Cirurgia").save({
+            nome: "HIDROCELECTOMIA",
+            tuss: "31203043"
+        });
+        await connection.getRepository("Cirurgia").save({
+            nome: "ORQUIDOPEXIA",
+            tuss: "31203060"
+        });
+        await connection.getRepository("Cirurgia").save({
+            nome: "ORQUIDOPEXIA LAPAROSCÓPICA",
+            tuss: "31203132"
+        });
+        await connection.getRepository("Cirurgia").save({
+            nome: "VARICOCELE",
+            tuss: "31203124"
+        });
+        await connection.getRepository("Cirurgia").save({
+            nome: "BIÓPSIA DE TESTÍCULO",
+            tuss: "31203027"
+        });
+        return true;
+    } catch (err){
+        console.log('Erro ao criar cirurgia: ', err);
         return false;
     }
 }

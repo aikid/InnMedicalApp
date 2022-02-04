@@ -5,14 +5,9 @@ import { useNavigation } from '@react-navigation/native';
 import logo from '../../assets/logo.png';
 import Input from '../../components/Input';
 import { Container, FormContent, Title, SubmitButton, SubmitButtonTitle } from './styles';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 function Login(){
     const navigation = useNavigation();
     const formRef = useRef(null);
-    const pickerOptions = [
-        { value: 'diego3g', label: 'Diego Fernandes' },
-        { value: 'EliasGcf', label: 'Elias Gabriel' },
-      ];
 
     function handleSubmit(data) {
         console.log(data);

@@ -1,17 +1,27 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Form } from '@unform/mobile';
 import { Container, FormContent, Title, SubmitButton, SubmitButtonTitle } from './styles';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import Input from '../../components/Input';
 import MaskInput from '../../components/MaskInput';
 import Select from '../../components/Select';
+import { setFormFieldsData } from '../../service/configService';
+import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 export default function Triagem(){
     const formRef = useRef(null);
     const [steep,setSteep] = useState(1);
     const [formData, setFormData] = useState({});
+    const [dataBaseInput, setDataBaseInput] = useState({});
+    const [selectedItems, setSelectedItems] = useState([]);
     
     const pickerOptions = [
-        { value: 'diego3g', label: 'Diego Fernandes' },
-        { value: 'EliasGcf', label: 'Elias Gabriel' },
+        { value: '1', label: 'Sim' },
+        { value: '2', label: 'Não' },
+    ];
+
+    const multSelectOptions = [
+        { id: '1', name: 'Sim' },
+        { id: '2', name: 'Não' },
     ];
 
     const checkRulesForm = (actuaSteep) =>{
@@ -25,8 +35,8 @@ export default function Triagem(){
     const nextStepp = (action) => {
         if(steep < 1 ) return;
 		const actionsOptions = {
-			Incress: () => { if(steep >= 1) setSteep(prevState => prevState + 1)},
-			Decress: () => { if(steep >= 1) setSteep(prevState => prevState - 1)},
+			Incress: () => { if(steep < 6) setSteep(prevState => prevState + 1)},
+			Decress: () => { if(steep > 1) setSteep(prevState => prevState - 1)},
 		};
 		actionsOptions[action]();
 	};
@@ -35,6 +45,7 @@ export default function Triagem(){
         console.log(data);
         setFormData(prevState=>({...prevState, ...data}));
         console.log('Dados atuais do formulario: ', formData);
+
         nextStepp('Incress');
     }
 
@@ -43,8 +54,18 @@ export default function Triagem(){
         console.log(data);
     }
 
-    useEffect(()=>{
+    const onSelectedItemsChange = (selectedItems) => {
+        console.log(selectedItems);
+      };
 
+    useEffect(()=>{
+        async function loadFormData(){
+            const dataFields = await setFormFieldsData();
+            if(dataFields) setDataBaseInput(dataFields);
+            console.log('Veio isso: ', dataFields);
+        }
+
+        loadFormData();
     },[])
 
     
@@ -57,10 +78,21 @@ export default function Triagem(){
                         <>
                             <Title>Dados iniciais do paciente</Title>
                             <Input name="nome" placeholder="Nome do Paciente"/>
-                            <Input name="email" placeholder="E-mail do Paciente" autoCorrect={false} autoCapitalize="none" keyboardType="email-address"/>
                             <MaskInput type="cpf" name="cpf" keyboardType="numeric" placeholder="CPF do Paciente" />
+                            <Input name="email" placeholder="E-mail do Paciente" autoCorrect={false} autoCapitalize="none" keyboardType="email-address"/>
                             <MaskInput type="cel-phone" name="telefone1" keyboardType="numeric" placeholder="Telefone 1 do Paciente" />
                             <MaskInput type="cel-phone" name="telefone2" keyboardType="numeric" placeholder="Telefone 2 do Paciente" />
+                            <SectionedMultiSelect
+                                items={multSelectOptions}
+                                IconRenderer={Icon}
+                                uniqueKey="id"
+                                subKey="children"
+                                selectText="Choose some things..."
+                                showDropDowns={false}
+                                readOnlyHeadings={true}
+                                onSelectedItemsChange={onSelectedItemsChange}
+                                selectedItems={selectedItems}
+                            />
                             <SubmitButton onPress={() => formRef.current.submitForm()}>
                                 <SubmitButtonTitle>Próximo</SubmitButtonTitle>
                             </SubmitButton>
@@ -70,9 +102,9 @@ export default function Triagem(){
                         <>
                             <Title>Dados da Cirurgia</Title>
                             
-                            <Select name="consultorio" items={pickerOptions} placeholder={{label: 'Consultório de Origem',value: null,color: '#9EA0A4'}}/>
-                            <Select name="tipodeProcesso" items={pickerOptions} placeholder={{label: 'Tipo de Processo',value: null,color: '#9EA0A4'}}/>
-                            <Select name="porteCirurgico" items={pickerOptions} placeholder={{label: 'Porte Cirúrgico',value: null,color: '#9EA0A4'}}/>
+                            <Select name="consultorio" items={dataBaseInput.dataConsultorios} placeholder={{label: 'Consultório de Origem',value: null,color: '#9EA0A4'}}/>
+                            <Select name="tipodeProcesso" items={dataBaseInput.dataTipodeprocesso} placeholder={{label: 'Tipo de Processo',value: null,color: '#9EA0A4'}}/>
+                            <Select name="porteCirurgico" items={dataBaseInput.dataPortecirurgico} placeholder={{label: 'Porte Cirúrgico',value: null,color: '#9EA0A4'}}/>
                             <Input name="cirurgiaPrincipal" placeholder="Cirurgia Principal" />
                             <SubmitButton onPress={() => formRef.current.submitForm()}>
                                 <SubmitButtonTitle>Próximo</SubmitButtonTitle>
@@ -85,9 +117,9 @@ export default function Triagem(){
                     { steep == 3 &&
                         <>  
                             <Title>Dados da Cirurgia</Title>
-                            <Select name="tipodeCirurgia" items={pickerOptions} placeholder={{label: 'Tipo de Cirurgia',value: null,color: '#9EA0A4'}}/>
+                            <Select name="tipodeCirurgia" items={dataBaseInput.dataTipodecirurgia} placeholder={{label: 'Tipo de Cirurgia',value: null,color: '#9EA0A4'}}/>
                             <Select name="oncologica" items={pickerOptions} placeholder={{label: 'Oncológica',value: null,color: '#9EA0A4'}}/>
-                            <Select name="cid10" items={pickerOptions} placeholder={{label: 'Cid10',value: null,color: '#9EA0A4'}}/>
+                            <Select name="cid10" items={dataBaseInput.dataCid10} placeholder={{label: 'Cid10',value: null,color: '#9EA0A4'}}/>
                             <Input name="diagnostico" placeholder="Diagnóstico" />
                             <SubmitButton onPress={() => formRef.current.submitForm()}>
                                 <SubmitButtonTitle>Próximo</SubmitButtonTitle>
@@ -101,8 +133,8 @@ export default function Triagem(){
                         <>  
                             <Title>Dados da Cirurgia</Title>
                            
-                            <Select name="cirurgias" items={pickerOptions} placeholder={{label: 'Cirurgias',value: null,color: '#9EA0A4'}}/>
-                            <Select name="materiaisCirurgicos" items={pickerOptions} placeholder={{label: 'Materiais Cirúrgicos',value: null,color: '#9EA0A4'}}/>
+                            <Select name="cirurgias" items={dataBaseInput.dataCirurgia} placeholder={{label: 'Cirurgias',value: null,color: '#9EA0A4'}}/>
+                            <Select name="materiaisCirurgicos" items={dataBaseInput.dataGruposcirurgico} placeholder={{label: 'Materiais Cirúrgicos',value: null,color: '#9EA0A4'}}/>
                             <Input name="materialOpme" placeholder="Material OPME" multiline/>
                             <Input name="materialPermanente" placeholder="Material Permanente" multiline/>
                             <SubmitButton onPress={() => formRef.current.submitForm()}>
@@ -117,8 +149,8 @@ export default function Triagem(){
                         <>  
                             <Title>Dados da Cirurgia</Title>
                            
-                            <Select name="empresaMaterial" items={pickerOptions} placeholder={{label: 'Empresa Material',value: null,color: '#9EA0A4'}}/>
-                            <Select name="anestesista" items={pickerOptions} placeholder={{label: 'Anestesista',value: null,color: '#9EA0A4'}}/>
+                            <Select name="empresaMaterial" items={dataBaseInput.dataEmpresamaterial} placeholder={{label: 'Empresa Material',value: null,color: '#9EA0A4'}}/>
+                            <Select name="anestesista" items={dataBaseInput.dataTipoanestesia} placeholder={{label: 'Anestesista',value: null,color: '#9EA0A4'}}/>
                             <Select name="reservaCti" items={pickerOptions} placeholder={{label: 'Reserva CTI',value: null,color: '#9EA0A4'}}/>
                             <Input name="diariasCti" placeholder="Diárias CTI" />
                             <SubmitButton onPress={() => formRef.current.submitForm()}>

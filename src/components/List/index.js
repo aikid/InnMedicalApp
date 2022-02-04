@@ -13,6 +13,7 @@ export default function List({ data, onCancel }) {
             <Info>
                 <Nome>Identificador: {data.id}</Nome>
                 <Numero>Nome: {data.nome}</Numero>
+                {data.tuss && <Numero>TUSS: {data.tuss}</Numero>}
             </Info>
         </Left>
 
