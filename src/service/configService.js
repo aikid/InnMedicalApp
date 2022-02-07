@@ -38,6 +38,17 @@ export const saveData = async(data,repository) =>{
     }
 }
 
+export const saveTriagem = async(data) =>{
+    try{
+        const connection = await getConnection();
+        await connection.getRepository("Triagem").save(data);
+        return true;
+    } catch (err) {
+        return false;
+        console.log(err);
+    }
+}
+
 export const saveMultData = async(data,repository) =>{
     try{
         const connection = await getConnection();
@@ -94,13 +105,13 @@ export const setFormFieldsData = async() =>{
     if(cid10s.length > 0) cid10s.map((cid10)=>{formData.dataCid10.push({value: cid10.id, label: cid10.nome})});
 
     const gruposcirurgicos = await connection.getRepository("Gruposcirurgico").find();
-    if(gruposcirurgicos.length > 0) gruposcirurgicos.map((gruposcirurgico)=>{formData.dataGruposcirurgico.push({value: gruposcirurgico.id, label: gruposcirurgico.nome})});
+    if(gruposcirurgicos.length > 0) gruposcirurgicos.map((gruposcirurgico)=>{formData.dataGruposcirurgico.push({id: gruposcirurgico.id, name: gruposcirurgico.nome})});
 
     const materialopmes = await connection.getRepository("MaterialOPME").find();
-    if(materialopmes.length > 0) materialopmes.map((materialopme)=>{formData.dataMaterialopme.push({value: materialopme.id, label: materialopme.nome})});
+    if(materialopmes.length > 0) materialopmes.map((materialopme)=>{formData.dataMaterialopme.push({groupId: materialopme.groupId, label: materialopme.nome})});
 
     const materialpermanentes = await connection.getRepository("MaterialPermanente").find();
-    if(materialpermanentes.length > 0) materialpermanentes.map((materialpermanente)=>{formData.dataMaterialpermanente.push({value: materialpermanente.id, label: materialpermanente.nome})});
+    if(materialpermanentes.length > 0) materialpermanentes.map((materialpermanente)=>{formData.dataMaterialpermanente.push({groupId: materialpermanente.groupId, label: materialpermanente.nome})});
 
     const empresamateriais = await connection.getRepository("Empresamaterial").find();
     if(empresamateriais.length > 0) empresamateriais.map((empresamaterial)=>{formData.dataEmpresamaterial.push({value: empresamaterial.id, label: empresamaterial.nome})});

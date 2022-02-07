@@ -72,7 +72,7 @@ function SingleConfig({route}){
 
             <FormContent behavior={Platform.OS === 'ios' ? 'padding' : ''}>
                 <Form ref={formRef} onSubmit={registerData}>
-                    <Input name="nome" placeholder="Nome do Consultorio"/>
+                    <Input name="nome" placeholder="Digite aqui..."/>
                     <SubmitButton onPress={() => formRef.current.submitForm()}>
                         <SubmitButtonTitle>Enviar</SubmitButtonTitle>
                     </SubmitButton>

@@ -5,25 +5,23 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import Input from '../../components/Input';
 import MaskInput from '../../components/MaskInput';
 import Select from '../../components/Select';
-import { setFormFieldsData } from '../../service/configService';
+import { setFormFieldsData,saveTriagem } from '../../service/configService';
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
+import { Alert } from 'react-native';
 export default function Triagem(){
     const formRef = useRef(null);
     const [steep,setSteep] = useState(1);
     const [formData, setFormData] = useState({});
     const [dataBaseInput, setDataBaseInput] = useState({});
     const [selectedItems, setSelectedItems] = useState([]);
+    const [fieldOpme, setFieldOpme] = useState('');
+    const [fieldPermanente, setFieldPermanente] = useState('');
     
     const pickerOptions = [
         { value: '1', label: 'Sim' },
         { value: '2', label: 'Não' },
     ];
-
-    const multSelectOptions = [
-        { id: '1', name: 'Sim' },
-        { id: '2', name: 'Não' },
-    ];
-
+    
     const checkRulesForm = (actuaSteep) =>{
         const rules = {
             Steep1: () => {if(!nome && !email && !cpf) return false},
@@ -42,29 +40,41 @@ export default function Triagem(){
 	};
 
     function updateFormData(data){
-        console.log(data);
         setFormData(prevState=>({...prevState, ...data}));
-        console.log('Dados atuais do formulario: ', formData);
-
         nextStepp('Incress');
+        if(steep == 6) handleSubmit(formData);
     }
 
 
     function handleSubmit(data) {
         console.log(data);
+        const save = saveTriagem(data);
+        if(save) Alert.alert('Sucesso!','A triagem foi salva com sucesso');
+        else Alert.alert('Opa!','O correu um erro ao salvar a triagem tente novamente');
     }
 
     const onSelectedItemsChange = (selectedItems) => {
-        console.log(selectedItems);
-      };
+        setSelectedItems(selectedItems)
+    };
+
+    useEffect(()=>{
+        if(selectedItems && selectedItems.length > 0){
+            for(let i=0; i<= selectedItems.length; i++){
+                console.log(selectedItems[i]);
+                const Materialopme = dataBaseInput.dataMaterialopme.find(data => data.groupId === selectedItems[i]);
+                const Materialpermanente = dataBaseInput.dataMaterialpermanente.find(data => data.groupId === selectedItems[i]);
+                if(Materialopme) setFieldOpme(prevState =>(prevState.concat('\n'+Materialopme.label)));
+                if(Materialpermanente) setFieldPermanente(prevState =>(prevState.concat('\n'+Materialpermanente.label)));
+            }
+        }
+        
+    },[selectedItems])
 
     useEffect(()=>{
         async function loadFormData(){
             const dataFields = await setFormFieldsData();
             if(dataFields) setDataBaseInput(dataFields);
-            console.log('Veio isso: ', dataFields);
         }
-
         loadFormData();
     },[])
 
@@ -82,17 +92,6 @@ export default function Triagem(){
                             <Input name="email" placeholder="E-mail do Paciente" autoCorrect={false} autoCapitalize="none" keyboardType="email-address"/>
                             <MaskInput type="cel-phone" name="telefone1" keyboardType="numeric" placeholder="Telefone 1 do Paciente" />
                             <MaskInput type="cel-phone" name="telefone2" keyboardType="numeric" placeholder="Telefone 2 do Paciente" />
-                            <SectionedMultiSelect
-                                items={multSelectOptions}
-                                IconRenderer={Icon}
-                                uniqueKey="id"
-                                subKey="children"
-                                selectText="Choose some things..."
-                                showDropDowns={false}
-                                readOnlyHeadings={true}
-                                onSelectedItemsChange={onSelectedItemsChange}
-                                selectedItems={selectedItems}
-                            />
                             <SubmitButton onPress={() => formRef.current.submitForm()}>
                                 <SubmitButtonTitle>Próximo</SubmitButtonTitle>
                             </SubmitButton>
@@ -134,9 +133,21 @@ export default function Triagem(){
                             <Title>Dados da Cirurgia</Title>
                            
                             <Select name="cirurgias" items={dataBaseInput.dataCirurgia} placeholder={{label: 'Cirurgias',value: null,color: '#9EA0A4'}}/>
-                            <Select name="materiaisCirurgicos" items={dataBaseInput.dataGruposcirurgico} placeholder={{label: 'Materiais Cirúrgicos',value: null,color: '#9EA0A4'}}/>
-                            <Input name="materialOpme" placeholder="Material OPME" multiline/>
-                            <Input name="materialPermanente" placeholder="Material Permanente" multiline/>
+                            <SectionedMultiSelect
+                                items={dataBaseInput.dataGruposcirurgico}
+                                IconRenderer={Icon}
+                                uniqueKey="id"
+                                selectText="Grupos Cirurgicos"
+                                selectedText="selecionados"
+                                showDropDowns={true}
+                                readOnlyHeadings={false}
+                                showChips={false}
+                                onSelectedItemsChange={onSelectedItemsChange}
+                                selectedItems={selectedItems}
+                            />
+                            {/* <Select name="materiaisCirurgicos" items={dataBaseInput.dataGruposcirurgico} placeholder={{label: 'Materiais Cirúrgicos',value: null,color: '#9EA0A4'}}/> */}
+                            <Input name="materialOpme" placeholder="Material OPME" value={fieldOpme} multiline/>
+                            <Input name="materialPermanente" placeholder="Material Permanente" value={fieldPermanente} multiline/>
                             <SubmitButton onPress={() => formRef.current.submitForm()}>
                                 <SubmitButtonTitle>Próximo</SubmitButtonTitle>
                             </SubmitButton>
