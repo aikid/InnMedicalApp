@@ -16,10 +16,11 @@ export default function Triagem(){
     const [selectedItems, setSelectedItems] = useState([]);
     const [fieldOpme, setFieldOpme] = useState('');
     const [fieldPermanente, setFieldPermanente] = useState('');
+    const [fieldGruposCirurgicos, setFieldGruposCirurgicos] = useState('');
     
     const pickerOptions = [
-        { value: '1', label: 'Sim' },
-        { value: '2', label: 'Não' },
+        { value: 'Sim', label: 'Sim' },
+        { value: 'Não', label: 'Não' },
     ];
     
     const checkRulesForm = (actuaSteep) =>{
@@ -47,6 +48,9 @@ export default function Triagem(){
 
 
     function handleSubmit(data) {
+        if(fieldOpme) data.materialOpme = fieldOpme;
+        if(fieldPermanente) data.materialPermanente = fieldPermanente;
+        if(fieldGruposCirurgicos) data.gruposcirurgicos = fieldGruposCirurgicos
         console.log(data);
         const save = saveTriagem(data);
         if(save) Alert.alert('Sucesso!','A triagem foi salva com sucesso');
@@ -63,8 +67,10 @@ export default function Triagem(){
                 console.log(selectedItems[i]);
                 const Materialopme = dataBaseInput.dataMaterialopme.find(data => data.groupId === selectedItems[i]);
                 const Materialpermanente = dataBaseInput.dataMaterialpermanente.find(data => data.groupId === selectedItems[i]);
+                const Gruposcirurgicos = dataBaseInput.dataGruposcirurgico.find(data => data.id === selectedItems[i]);
                 if(Materialopme) setFieldOpme(prevState =>(prevState.concat('\n'+Materialopme.label)));
                 if(Materialpermanente) setFieldPermanente(prevState =>(prevState.concat('\n'+Materialpermanente.label)));
+                if(Gruposcirurgicos) setFieldGruposCirurgicos(prevState =>(prevState.concat(' , '+Gruposcirurgicos.name)));
             }
         }
         
@@ -88,10 +94,10 @@ export default function Triagem(){
                         <>
                             <Title>Dados iniciais do paciente</Title>
                             <Input name="nome" placeholder="Nome do Paciente"/>
-                            <MaskInput type="cpf" name="cpf" keyboardType="numeric" placeholder="CPF do Paciente" />
+                            <Input type="cpf" name="cpf" keyboardType="numeric" placeholder="CPF do Paciente" />
                             <Input name="email" placeholder="E-mail do Paciente" autoCorrect={false} autoCapitalize="none" keyboardType="email-address"/>
-                            <MaskInput type="cel-phone" name="telefone1" keyboardType="numeric" placeholder="Telefone 1 do Paciente" />
-                            <MaskInput type="cel-phone" name="telefone2" keyboardType="numeric" placeholder="Telefone 2 do Paciente" />
+                            <Input type="cel-phone" name="telefone1" keyboardType="numeric" placeholder="Telefone 1 do Paciente" />
+                            <Input type="cel-phone" name="telefone2" keyboardType="numeric" placeholder="Telefone 2 do Paciente" />
                             <SubmitButton onPress={() => formRef.current.submitForm()}>
                                 <SubmitButtonTitle>Próximo</SubmitButtonTitle>
                             </SubmitButton>

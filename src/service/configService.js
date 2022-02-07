@@ -90,19 +90,19 @@ export const setFormFieldsData = async() =>{
     };
     const connection = await getConnection();
     const consultorios = await connection.getRepository("Consultorio").find();
-    if(consultorios.length > 0) consultorios.map((consultorio)=>{formData.dataConsultorios.push({value: consultorio.id, label: consultorio.nome})});
+    if(consultorios.length > 0) consultorios.map((consultorio)=>{formData.dataConsultorios.push({value: consultorio.nome, label: consultorio.nome})});
 
     const tipodeprocessos = await connection.getRepository("Tipodeprocesso").find();
-    if(tipodeprocessos.length > 0) tipodeprocessos.map((tipodeprocesso)=>{formData.dataTipodeprocesso.push({value: tipodeprocesso.id, label: tipodeprocesso.nome})});
+    if(tipodeprocessos.length > 0) tipodeprocessos.map((tipodeprocesso)=>{formData.dataTipodeprocesso.push({value: tipodeprocesso.nome, label: tipodeprocesso.nome})});
 
     const portecirurgicos = await connection.getRepository("Portecirurgico").find();
-    if(portecirurgicos.length > 0) portecirurgicos.map((portecirurgico)=>{formData.dataPortecirurgico.push({value: portecirurgico.id, label: portecirurgico.nome})});
+    if(portecirurgicos.length > 0) portecirurgicos.map((portecirurgico)=>{formData.dataPortecirurgico.push({value: portecirurgico.nome, label: portecirurgico.nome})});
 
     const tipodecirurgias = await connection.getRepository("Tipodecirurgia").find();
-    if(tipodecirurgias.length > 0) tipodecirurgias.map((tipodecirurgia)=>{formData.dataTipodecirurgia.push({value: tipodecirurgia.id, label: tipodecirurgia.nome})});
+    if(tipodecirurgias.length > 0) tipodecirurgias.map((tipodecirurgia)=>{formData.dataTipodecirurgia.push({value: tipodecirurgia.nome, label: tipodecirurgia.nome})});
 
     const cid10s = await connection.getRepository("Cid10").find();
-    if(cid10s.length > 0) cid10s.map((cid10)=>{formData.dataCid10.push({value: cid10.id, label: cid10.nome})});
+    if(cid10s.length > 0) cid10s.map((cid10)=>{formData.dataCid10.push({value: cid10.nome, label: cid10.nome})});
 
     const gruposcirurgicos = await connection.getRepository("Gruposcirurgico").find();
     if(gruposcirurgicos.length > 0) gruposcirurgicos.map((gruposcirurgico)=>{formData.dataGruposcirurgico.push({id: gruposcirurgico.id, name: gruposcirurgico.nome})});
@@ -114,13 +114,13 @@ export const setFormFieldsData = async() =>{
     if(materialpermanentes.length > 0) materialpermanentes.map((materialpermanente)=>{formData.dataMaterialpermanente.push({groupId: materialpermanente.groupId, label: materialpermanente.nome})});
 
     const empresamateriais = await connection.getRepository("Empresamaterial").find();
-    if(empresamateriais.length > 0) empresamateriais.map((empresamaterial)=>{formData.dataEmpresamaterial.push({value: empresamaterial.id, label: empresamaterial.nome})});
+    if(empresamateriais.length > 0) empresamateriais.map((empresamaterial)=>{formData.dataEmpresamaterial.push({value: empresamaterial.nome, label: empresamaterial.nome})});
 
     const tipoanestesias = await connection.getRepository("Tipoanestesia").find();
-    if(tipoanestesias.length > 0) tipoanestesias.map((tipoanestesia)=>{formData.dataTipoanestesia.push({value: tipoanestesia.id, label: tipoanestesia.nome})});
+    if(tipoanestesias.length > 0) tipoanestesias.map((tipoanestesia)=>{formData.dataTipoanestesia.push({value: tipoanestesia.nome, label: tipoanestesia.nome})});
 
     const cirurgias = await connection.getRepository("Cirurgia").find();
-    if(cirurgias.length > 0) cirurgias.map((cirurgia)=>{formData.dataCirurgia.push({value: cirurgia.id, label: cirurgia.nome})});
+    if(cirurgias.length > 0) cirurgias.map((cirurgia)=>{formData.dataCirurgia.push({value: cirurgia.nome, label: cirurgia.nome})});
     
     return formData;
 }
