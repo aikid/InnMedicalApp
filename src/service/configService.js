@@ -6,6 +6,7 @@ export const getData = async(repository) =>{
     try {
         const connection = await getConnection();
         const data = await connection.getRepository(repository).find();
+        console.log('Dados obtidos: ', data, repository);
         if(data.length > 0) return data;
         else return [];
     } catch (err) {

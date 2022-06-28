@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import { useNavigation } from '@react-navigation/native';
+import React, {useCallback, useState} from 'react';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { getData, deleteData } from '../../service/configService';
 import List from '../../components/List';
 import { Container, Title, Listagem } from './styles';
@@ -35,12 +35,18 @@ function Dashboard({route}){
             dataType.filter(dataType =>dataType.id !== id)
         );
     }
-    
-    useEffect(async () => {
-        const verifyData = await getData(repository);
-        console.log(verifyData);
-        setDataType(verifyData);
-    }, []);
+
+    useFocusEffect(
+        useCallback(() => {
+            async function loadData(){
+                const verifyData = await getData(repository);
+                console.log(verifyData);
+                setDataType(verifyData);
+            }
+        
+            loadData();
+        }, [])
+    );
 
     return (
         <Container>

@@ -40,10 +40,49 @@ export const initMigrations = async() =>{
         const cirurgia = await connection.getRepository("Cirurgia").find();
         if(cirurgia.length == 0) await createCirurgias(connection);
 
+        const triagem = await connection.getRepository("Triagem").find();
+        if(triagem.length == 0) await createTriagem(connection);
+
         return true;
     } catch (err) {
         return true;
         console.log(err); // check (or deal) with connection errors
+    }
+}
+
+export const createTriagem = async(connection) =>{
+    try{
+        await connection.getRepository("Triagem").save({
+            anestesista: "Da Equipe",
+            cid10: "Z30.2",
+            cirurgiaPrincipal: "Teste ",
+            cirurgias: "URETERORRENOLITOTRIPSIA FLEXIVEL A LASER UNILATERAL",
+            consultorio: "IN Itaim",
+            cpf: "23095106882",
+            diagnostico: "Teste",
+            diariasCti: "Teste",
+            email: "klonoa51@gmail.com",
+            empresaMaterial: "Storm",
+            gruposcirurgicos: " , URETEROLITOTRIPSIA RÍGIDA LASER",
+            materialOpme: "2 Fios Guia Hidrofílicos / 1 Fibra Laser / 1 Basket / 1 Cateter Balão de Dilatação Ureteral / 1 Cateter Duplo Jota",
+            materialPermanente: "Ureteroscópio Semi-Rígido / Cistoscópio / Radioscopia / Set de Vídeo",
+            nome: "Teste ",
+            oncologica: "Sim",
+            porteCirurgico: "Pequeno",
+            reservaCti: "Sim",
+            telefone1: "11947341276",
+            telefone2: "11947341276",
+            tipodeCirurgia: "Aberta",
+            tipodeProcesso: "100% Reembolso",
+            tipagemSanguinea:"A",
+            reservaSangue: "Sim",
+            tipoQuantidade: "4 Litros",
+            orientacoes: "Paciente diabético, seguir medidas padrão de aplicação de medicamentos",
+        });
+        return true;
+    } catch (err){
+        console.log('Erro ao criar triagem: ', err);
+        return false;
     }
 }
 

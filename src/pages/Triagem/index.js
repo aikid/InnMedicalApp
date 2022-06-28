@@ -1,4 +1,5 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { Form } from '@unform/mobile';
 import { Container, FormContent, Title, SubmitButton, SubmitButtonTitle } from './styles';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -34,24 +35,30 @@ export default function Triagem(){
     const nextStepp = (action) => {
         if(steep < 1 ) return;
 		const actionsOptions = {
-			Incress: () => { if(steep < 6) setSteep(prevState => prevState + 1)},
-			Decress: () => { if(steep > 1) setSteep(prevState => prevState - 1)},
+			Incress: () => { 
+                if(steep < 7) setSteep(prevState => prevState + 1)
+            },
+			Decress: () => { 
+                if(steep > 1) setSteep(prevState => prevState - 1)
+            },
 		};
 		actionsOptions[action]();
 	};
 
     function updateFormData(data){
-        setFormData(prevState=>({...prevState, ...data}));
         nextStepp('Incress');
-        if(steep == 6) handleSubmit(formData);
+        setFormData(prevState=>({...prevState, ...data}));
+        console.log('Dados do formulário: ', formData);
+        console.log('Etapa atual: ', steep);
+        if(steep == 7) handleSubmit(formData);
     }
 
 
     function handleSubmit(data) {
+        console.log(data);
         if(fieldOpme) data.materialOpme = fieldOpme;
         if(fieldPermanente) data.materialPermanente = fieldPermanente;
         if(fieldGruposCirurgicos) data.gruposcirurgicos = fieldGruposCirurgicos
-        console.log(data);
         const save = saveTriagem(data);
         if(save) Alert.alert('Sucesso!','A triagem foi salva com sucesso');
         else Alert.alert('Opa!','O correu um erro ao salvar a triagem tente novamente');
@@ -83,6 +90,13 @@ export default function Triagem(){
         }
         loadFormData();
     },[])
+
+    useFocusEffect(
+        useCallback(() => {
+            setSteep(1);
+            setFormData({})
+        }, [])
+    );
 
     
     
@@ -191,6 +205,17 @@ export default function Triagem(){
                             </SubmitButton>
                             <SubmitButton onPress={() => nextStepp('Decress')}>
                                 <SubmitButtonTitle>Voltar</SubmitButtonTitle>
+                            </SubmitButton>
+                        </>
+                    }
+                    { steep == 7 &&
+                        <>  
+                            <Title>Você deseja cadastrar a triagem preenchida?</Title>
+                            <SubmitButton onPress={() => formRef.current.submitForm()}>
+                                <SubmitButtonTitle>Confirmar</SubmitButtonTitle>
+                            </SubmitButton>
+                            <SubmitButton onPress={() => nextStepp('Decress')}>
+                                <SubmitButtonTitle>Voltar e Corrigir</SubmitButtonTitle>
                             </SubmitButton>
                         </>
                     }
