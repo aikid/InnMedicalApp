@@ -40,7 +40,6 @@ function Dashboard({route}){
         useCallback(() => {
             async function loadData(){
                 const verifyData = await getData(repository);
-                console.log(verifyData);
                 setDataType(verifyData);
             }
         

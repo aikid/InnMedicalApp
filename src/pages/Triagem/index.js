@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { Alert } from 'react-native';
+import {  useFocusEffect } from '@react-navigation/native';
 import { Form } from '@unform/mobile';
 import { Container, FormContent, Title, SubmitButton, SubmitButtonTitle } from './styles';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -8,7 +9,7 @@ import MaskInput from '../../components/MaskInput';
 import Select from '../../components/Select';
 import { setFormFieldsData,saveTriagem } from '../../service/configService';
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
-import { Alert } from 'react-native';
+import CameraButton from '../../components/Camera';
 export default function Triagem(){
     const formRef = useRef(null);
     const [steep,setSteep] = useState(1);
@@ -17,7 +18,11 @@ export default function Triagem(){
     const [selectedItems, setSelectedItems] = useState([]);
     const [fieldOpme, setFieldOpme] = useState('');
     const [fieldPermanente, setFieldPermanente] = useState('');
+    const [materialOpme, setMaterialOpme] = useState('');
+    const [materialPermanente, setMaterialPermanente] = useState('');
     const [fieldGruposCirurgicos, setFieldGruposCirurgicos] = useState('');
+    const [displayDiariaCTI, setDisplayDiariaCTI] = useState(false);
+    const [displayTipoQuantidade, setDisplayTipoQuantidade] = useState(false);
     
     const pickerOptions = [
         { value: 'Sim', label: 'Sim' },
@@ -48,14 +53,11 @@ export default function Triagem(){
     function updateFormData(data){
         nextStepp('Incress');
         setFormData(prevState=>({...prevState, ...data}));
-        console.log('Dados do formulário: ', formData);
-        console.log('Etapa atual: ', steep);
         if(steep == 7) handleSubmit(formData);
     }
 
 
     function handleSubmit(data) {
-        console.log(data);
         if(fieldOpme) data.materialOpme = fieldOpme;
         if(fieldPermanente) data.materialPermanente = fieldPermanente;
         if(fieldGruposCirurgicos) data.gruposcirurgicos = fieldGruposCirurgicos
@@ -67,6 +69,15 @@ export default function Triagem(){
     const onSelectedItemsChange = (selectedItems) => {
         setSelectedItems(selectedItems)
     };
+
+    useEffect(()=>{
+        if(formData && formData.reservaCti && formData.reservaCti === 'Sim') setDisplayDiariaCTI(true);
+        else setDisplayDiariaCTI(false);
+        if(formData && formData.reservaSangue && formData.reservaSangue === 'Sim') setDisplayTipoQuantidade(true);
+        else setDisplayTipoQuantidade(false);
+    },[formData])
+
+    
 
     useEffect(()=>{
         if(selectedItems && selectedItems.length > 0){
@@ -94,7 +105,10 @@ export default function Triagem(){
     useFocusEffect(
         useCallback(() => {
             setSteep(1);
-            setFormData({})
+            setFormData({});
+            setSelectedItems([]);
+            setFieldOpme('');
+            setFieldPermanente('')
         }, [])
     );
 
@@ -166,8 +180,8 @@ export default function Triagem(){
                                 selectedItems={selectedItems}
                             />
                             {/* <Select name="materiaisCirurgicos" items={dataBaseInput.dataGruposcirurgico} placeholder={{label: 'Materiais Cirúrgicos',value: null,color: '#9EA0A4'}}/> */}
-                            <Input name="materialOpme" placeholder="Material OPME" value={fieldOpme} multiline/>
-                            <Input name="materialPermanente" placeholder="Material Permanente" value={fieldPermanente} multiline/>
+                            <Input name="materialOpme" placeholder="Material OPME" value={fieldOpme} onChangeText={value => setFieldOpme(value)} multiline/>
+                            <Input name="materialPermanente" placeholder="Material Permanente" value={fieldPermanente} onChangeText={value => setFieldPermanente(value)} multiline/>
                             <SubmitButton onPress={() => formRef.current.submitForm()}>
                                 <SubmitButtonTitle>Próximo</SubmitButtonTitle>
                             </SubmitButton>
@@ -183,7 +197,7 @@ export default function Triagem(){
                             <Select name="empresaMaterial" items={dataBaseInput.dataEmpresamaterial} placeholder={{label: 'Empresa Material',value: null,color: '#9EA0A4'}}/>
                             <Select name="anestesista" items={dataBaseInput.dataTipoanestesia} placeholder={{label: 'Anestesista',value: null,color: '#9EA0A4'}}/>
                             <Select name="reservaCti" items={pickerOptions} placeholder={{label: 'Reserva CTI',value: null,color: '#9EA0A4'}}/>
-                            <Input name="diariasCti" placeholder="Diárias CTI" />
+                            
                             <SubmitButton onPress={() => formRef.current.submitForm()}>
                                 <SubmitButtonTitle>Próximo</SubmitButtonTitle>
                             </SubmitButton>
@@ -198,10 +212,9 @@ export default function Triagem(){
                            
                             <Select name="tipagemSanguinea" items={pickerOptions} placeholder={{label: 'Tipagem Sanguínea',value: null,color: '#9EA0A4'}}/>
                             <Select name="reservaSangue" items={pickerOptions} placeholder={{label: 'Reserva de Sangue',value: null,color: '#9EA0A4'}}/>
-                            <Input name="tipoQuantidade" placeholder="Tipo e quantidade" />
                             <Input name="orientacoes" placeholder="Orientações Gerais" multiline/>
                             <SubmitButton onPress={() => formRef.current.submitForm()}>
-                                <SubmitButtonTitle>Enviar</SubmitButtonTitle>
+                                <SubmitButtonTitle>Próximo</SubmitButtonTitle>
                             </SubmitButton>
                             <SubmitButton onPress={() => nextStepp('Decress')}>
                                 <SubmitButtonTitle>Voltar</SubmitButtonTitle>
@@ -210,13 +223,16 @@ export default function Triagem(){
                     }
                     { steep == 7 &&
                         <>  
-                            <Title>Você deseja cadastrar a triagem preenchida?</Title>
+                            <Title>Você deseja enviar a triagem preenchida?</Title>
+                            {displayDiariaCTI && <Input name="diariasCti" placeholder="Diárias CTI" />}
+                            {displayTipoQuantidade && <Input name="tipoQuantidade" placeholder="Tipo e quantidade" />}
                             <SubmitButton onPress={() => formRef.current.submitForm()}>
-                                <SubmitButtonTitle>Confirmar</SubmitButtonTitle>
+                                <SubmitButtonTitle>Enviar</SubmitButtonTitle>
                             </SubmitButton>
                             <SubmitButton onPress={() => nextStepp('Decress')}>
                                 <SubmitButtonTitle>Voltar e Corrigir</SubmitButtonTitle>
                             </SubmitButton>
+                            {/* <CameraButton/> */}
                         </>
                     }
                 </Form>

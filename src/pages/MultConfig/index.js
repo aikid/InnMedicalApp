@@ -85,7 +85,7 @@ function MultConfig({route}){
             <FormContent behavior={Platform.OS === 'ios' ? 'padding' : ''}>
                 <Form ref={formRef} onSubmit={registerData}>
                     <Select name="grupocirurgico" items={gruposcirurgico} placeholder={{label: 'Grupo Cirurgíco',value: null,color: '#9EA0A4'}}/>
-                    <Input name="nome" placeholder="Nome do Consultorio"/>
+                    <Input name="nome" placeholder="Nome:"/>
                     <SubmitButton onPress={() => formRef.current.submitForm()}>
                         <SubmitButtonTitle>Enviar</SubmitButtonTitle>
                     </SubmitButton>
